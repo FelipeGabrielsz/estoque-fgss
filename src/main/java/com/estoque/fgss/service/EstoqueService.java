@@ -1,6 +1,8 @@
 package com.estoque.fgss.service;
 
 import com.estoque.fgss.model.Produto;
+import com.estoque.fgss.repositories.EstoqueRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,18 +12,15 @@ import java.util.List;
 @Service
 public class EstoqueService {
 
-    //Get
-    public ResponseEntity<List<Produto>> buscarTodosProdutos(){
+    @Autowired
+    private EstoqueRepository estoqueRepository;
 
-        return ResponseEntity.ok(null);
+    public List<Produto> buscarTodosProdutos(){
+        return estoqueRepository.findAll();
     }
 
-    //Post
-    public ResponseEntity<Object> cadastrarProduto(@RequestBody Produto produto){
-
-        Object object = new Object();
-
-        return ResponseEntity.ok(object);
+    public void cadastrarProduto(Produto produto){
+        estoqueRepository.save(produto);
     }
 
 }
