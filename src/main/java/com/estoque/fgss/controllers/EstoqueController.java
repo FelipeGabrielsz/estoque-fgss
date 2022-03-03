@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,7 +21,7 @@ public class EstoqueController {
 
     @GetMapping
     public ResponseEntity<List<Produto>> buscarTodosProdutos() {
-         return ResponseEntity.status(HttpStatus.OK).body((estoqueService.buscarTodosProdutos()));
+        return ResponseEntity.status(HttpStatus.OK).body((estoqueService.buscarTodosProdutos()));
     }
 
     @PostMapping
@@ -30,22 +29,17 @@ public class EstoqueController {
         var produto = new Produto();
         BeanUtils.copyProperties(produtoDto, produto);
 
-        if (estoqueService.nomeExistente(produto.getNome())){
+        if (estoqueService.nomeExistente(produto.getNome())) {
 
             //Irá ficar mesclado
             produto = estoqueService.mesclarProdutoCasoJaExistir(produto);
 
-            produto.setQuantidade(
-                    estoqueService.somarQuantidadeSeJaExistir(produto, produto.getQuantidade())
-            );
-
             estoqueService.cadastrarProduto(produto);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("'"+produto.getNome()+"'" + " foi cadastrado com Sucesso");
+                    .body("'" + produto.getNome() + "'" + " foi cadastrado com Sucesso");
         }
-
         estoqueService.cadastrarProduto(produto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body("'"+produto.getNome()+"'" + " foi cadastrado com Sucesso");
+                .body("'" + produto.getNome() + "'" + " foi cadastrado com Sucesso");
     }
 }

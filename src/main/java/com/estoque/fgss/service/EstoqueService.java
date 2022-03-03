@@ -1,6 +1,5 @@
 package com.estoque.fgss.service;
 
-import com.estoque.fgss.dto.ProdutoDto;
 import com.estoque.fgss.model.Produto;
 import com.estoque.fgss.repositories.EstoqueRepository;
 import org.springframework.beans.BeanUtils;
@@ -16,30 +15,26 @@ public class EstoqueService {
     @Autowired
     private EstoqueRepository estoqueRepository;
 
-    public List<Produto> buscarTodosProdutos(){
+    public List<Produto> buscarTodosProdutos() {
         return estoqueRepository.findAll();
     }
 
     @Transactional
-    public Object cadastrarProduto(Produto produto){
+    public Object cadastrarProduto(Produto produto) {
         return estoqueRepository.save(produto);
     }
 
-    public boolean nomeExistente(String nome){
+    public boolean nomeExistente(String nome) {
         return estoqueRepository.existsByNome(nome);
     }
 
-    public Long somarQuantidadeSeJaExistir(Produto produto, Long valorAtual){
+    public Produto mesclarProdutoCasoJaExistir(Produto produto) {
         Produto produtoPorNome = new Produto();
         BeanUtils.copyProperties(estoqueRepository.findByNome(produto.getNome()), produtoPorNome);
-        return produtoPorNome.getQuantidade() + valorAtual;
-    }
 
-    public Produto mesclarProdutoCasoJaExistir(Produto produto){
+        produto = produtoPorNome;
 
-        var produtoPorNome = estoqueRepository.findByNome(produto.getNome());
-
-        BeanUtils.copyProperties(produtoPorNome, produto);
+        produto.setQuantidade(produtoPorNome.getQuantidade() + produto.getQuantidade());
 
         return produto;
     }

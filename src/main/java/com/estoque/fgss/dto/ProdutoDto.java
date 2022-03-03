@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +14,7 @@ public class ProdutoDto {
 
     @NotBlank
     private String nome;
-
+    @Positive
     private Long quantidade;
 
 }
