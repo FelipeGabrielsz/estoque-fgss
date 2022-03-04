@@ -24,16 +24,18 @@ public class EstoqueController {
         return ResponseEntity.status(HttpStatus.OK).body((estoqueService.buscarTodosProdutos()));
     }
 
+    @GetMapping("/{nome}")
+    public ResponseEntity<Object> buscarProdutoPorNome(@PathVariable(value = "nome") String nome){
+        return ResponseEntity.status(HttpStatus.OK).body(estoqueService.buscarProdutoPorNome(nome));
+    }
+
     @PostMapping
     public ResponseEntity<Object> cadastrarProduto(@RequestBody @Valid ProdutoDto produtoDto) {
         var produto = new Produto();
         BeanUtils.copyProperties(produtoDto, produto);
-
         if (estoqueService.nomeExistente(produto.getNome())) {
-
             //Irá ficar mesclado
-            produto = estoqueService.mesclarProdutoCasoJaExistir(produto);
-
+            produto = estoqueService.mesclarProdutoCasoJaExistir(produto, produtoDto.getQuantidade());
             estoqueService.cadastrarProduto(produto);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("'" + produto.getNome() + "'" + " foi cadastrado com Sucesso");
@@ -41,5 +43,11 @@ public class EstoqueController {
         estoqueService.cadastrarProduto(produto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("'" + produto.getNome() + "'" + " foi cadastrado com Sucesso");
+    }
+
+    @DeleteMapping("/{nome}")
+    public ResponseEntity<Object> deletarProdutoPorNome(@PathVariable(value = "nome") String nome){
+        estoqueService.deletarProdutoPorNome(nome);
+        return ResponseEntity.status(HttpStatus.OK).body("Produto removido com sucesso!");
     }
 }

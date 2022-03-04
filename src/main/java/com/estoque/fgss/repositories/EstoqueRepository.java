@@ -5,8 +5,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface EstoqueRepository extends MongoRepository<Produto, String> {
 
-    public Object findByNome(String nome);
+    Object findByNome(String nome);
 
-    public boolean existsByNome(String nome);
+    Object deleteByNome(String nome);
+
+    boolean existsByNome(String nome);
 
 }
