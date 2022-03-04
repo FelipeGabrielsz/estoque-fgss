@@ -25,7 +25,7 @@ public class EstoqueController {
     }
 
     @GetMapping("/{nome}")
-    public ResponseEntity<Object> buscarProdutoPorNome(@PathVariable(value = "nome") String nome){
+    public ResponseEntity<Object> buscarProdutoPorNome(@PathVariable(value = "nome") String nome) {
         return ResponseEntity.status(HttpStatus.OK).body(estoqueService.buscarProdutoPorNome(nome));
     }
 
@@ -46,8 +46,13 @@ public class EstoqueController {
     }
 
     @DeleteMapping("/{nome}")
-    public ResponseEntity<Object> deletarProdutoPorNome(@PathVariable(value = "nome") String nome){
-        estoqueService.deletarProdutoPorNome(nome);
-        return ResponseEntity.status(HttpStatus.OK).body("Produto removido com sucesso!");
+    public ResponseEntity<Object> deletarProdutoPorNome(@PathVariable(value = "nome") String nome) {
+        if (estoqueService.nomeExistente(nome)) {
+            estoqueService.deletarProdutoPorNome(nome);
+            return ResponseEntity.status(HttpStatus.OK).body("Produto removido com sucesso!");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Nenhum item com esse nome foi encontrado para deletar!");
     }
 }
